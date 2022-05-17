@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ApplicationManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ApplicationTypeName="eModalMicroservicesType" ApplicationTypeVersion="1.0.0" xmlns="http://schemas.microsoft.com/2011/01/fabric">
+  <Parameters>
+    <Parameter Name="EDidataToCosmos_ASPNETCORE_ENVIRONMENT" DefaultValue="" />
+    <Parameter Name="EDIdataAPI_ASPNETCORE_ENVIRONMENT" DefaultValue="" />
+  </Parameters>
+  <!-- Import the ServiceManifest from the ServicePackage. The ServiceManifestName and ServiceManifestVersion 
+       should match the Name and Version attributes of the ServiceManifest element defined in the 
+       ServiceManifest.xml file. -->
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="EDidataToCosmosPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+    <EnvironmentOverrides CodePackageRef="code">
+      <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="[EDidataToCosmos_ASPNETCORE_ENVIRONMENT]" />
+    </EnvironmentOverrides>
+  </ServiceManifestImport>
+  <ServiceManifestImport>
+    <ServiceManifestRef ServiceManifestName="EDIdataAPIPkg" ServiceManifestVersion="1.0.0" />
+    <ConfigOverrides />
+    <EnvironmentOverrides CodePackageRef="code">
+      <EnvironmentVariable Name="ASPNETCORE_ENVIRONMENT" Value="[EDIdataAPI_ASPNETCORE_ENVIRONMENT]" />
+    </EnvironmentOverrides>
+    <Policies>
+      <RunAsPolicy CodePackageRef="Code" UserRef="(LocalDb)\MSSQLLocalDB" />
+    </Policies>
+  </ServiceManifestImport>
+  <Principals>
+    <Users>
+      <User Name="(LocalDb)\MSSQLLocalDB" AccountType="LocalSystem" />
+    </Users>
+  </Principals>
+</ApplicationManifest>
