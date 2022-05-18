@@ -42,6 +42,7 @@
     <ProjectReference Include="..\EDidataToCosmos\EDidataToCosmos.csproj">
       <ServiceLaunchUrl>http://localhost:{ServicePort}/swagger</ServiceLaunchUrl>
     </ProjectReference>
+    <ProjectReference Include="..\TransactionServiceBus\TransactionServiceBus.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
   <PropertyGroup>

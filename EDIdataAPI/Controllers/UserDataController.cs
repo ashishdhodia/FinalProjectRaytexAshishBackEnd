@@ -24,11 +24,11 @@ namespace EDIdataAPI.Controllers
 
         // POST api/<UserDataController>
         [HttpPost]
-        public void Post([Bind("Id,emailid,userid, userpass, useraddress")] UserData userdData)
+        public void Post([Bind("Id,emailId,userId, userPass, userAddress")] UserData userdData)
         {
             if (ModelState.IsValid)
             {
-                dataAdapter = new SqlDataAdapter($"INSERT INTO userData (emailid,userid, userpass, useraddress) VALUES('{userdData.emailid}','{userdData.userid}', '{userdData.userpass}', '{userdData.useraddress}')", _con);
+                dataAdapter = new SqlDataAdapter($"INSERT INTO userData (emailId,userId,userPass,userAddress) VALUES('{userdData.emailId}','{userdData.userId}', '{userdData.userPass}', '{userdData.userAddress}')", _con);
                 dataAdapter.Fill(dataTable);
             }
         }

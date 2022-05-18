@@ -3,6 +3,9 @@ using EDIdataAPI.Model;
 using System.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Messaging.ServiceBus;
+using Newtonsoft.Json;
+using System.IO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,6 +19,11 @@ namespace EDIdataAPI.Controllers
         private readonly SqlConnection _con;
         private SqlDataAdapter dataAdapter;
         private DataTable dataTable = new DataTable();
+
+        private string connectionString = "Endpoint=sb://trngahmedabd.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=kkNMAoMhIPaQouXaiB570uBPdiXSba1lHxOHebdJ5go=";
+        private string topicName = "topic-ashish";
+        private ServiceBusClient client;
+        private ServiceBusSender sender;
 
         public TransactionDataController()
         {
@@ -36,9 +44,9 @@ namespace EDIdataAPI.Controllers
                 transactionData.Add(new TransactionData
                 {
                     Id = Convert.ToInt32(row["id"]),
-                    containerid = Convert.ToString(row["containerid"]),
+                    containerId = Convert.ToString(row["containerId"]),
                     containerFees = Convert.ToInt32(row["containerFees"]),
-                    userid = Convert.ToString(row["userid"]),
+                    userId = Convert.ToString(row["userId"]),
                     cardOwnerName = Convert.ToString(row["cardOwnerName"]),
                     cardType = Convert.ToString(row["cardType"]),
                     cardNumber = Convert.ToInt32(row["cardNumber"]),
@@ -50,15 +58,30 @@ namespace EDIdataAPI.Controllers
 
         // POST api/<TransactionDataController>
         [HttpPost]
-        public void Post([Bind("Id,containerid,containerFees, userid, cardOwnerName, cardType, cardNumber, txnTime")] TransactionData transactionData)
+        public async void Post([Bind("Id,containerId,containerFees, userId, cardOwnerName, cardType, cardNumber, txnTime")] TransactionData transactionData)
         {
             transactionData.txnTime = DateTime.Now.ToString();
+            string dataForTopic = JsonConvert.SerializeObject(transactionData);
 
-            if (ModelState.IsValid)
+            client = new ServiceBusClient(connectionString);
+            sender = client.CreateSender(topicName);
+            using ServiceBusMessageBatch messageBatch = await sender.CreateMessageBatchAsync();
+            messageBatch.TryAddMessage(new ServiceBusMessage(dataForTopic));
+            try
             {
-                dataAdapter = new SqlDataAdapter($"INSERT INTO transactionData(containerid,containerFees, userid, cardOwnerName, cardType, cardNumber, txnTime) VALUES('{transactionData.containerid}','{transactionData.containerFees}', '{transactionData.userid}', '{transactionData.cardOwnerName}', '{transactionData.cardType}', '{transactionData.cardNumber}', '{transactionData.txnTime}')", _con);
-                dataAdapter.Fill(dataTable);
+                await sender.SendMessagesAsync(messageBatch);
             }
+            finally
+            {
+                await sender.DisposeAsync();
+                await client.DisposeAsync();
+            }
+
+            //if (ModelState.IsValid)
+            //{
+            //    dataAdapter = new SqlDataAdapter($"INSERT INTO transactionData(containerId,containerFees, userId, cardOwnerName, cardType, cardNumber, txnTime) VALUES('{transactionData.containerId}','{transactionData.containerFees}', '{transactionData.userId}', '{transactionData.cardOwnerName}', '{transactionData.cardType}', '{transactionData.cardNumber}', '{transactionData.txnTime}')", _con);
+            //    dataAdapter.Fill(dataTable);
+            //}
         }
     }
 }

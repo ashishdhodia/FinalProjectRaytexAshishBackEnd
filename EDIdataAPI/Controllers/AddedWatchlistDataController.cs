@@ -37,19 +37,19 @@ namespace EDIdataAPI.Controllers
                 addedWatchlistData.Add(new AddedWatchlistData
                 {
                     Id = Convert.ToInt32(row["id"]),
-                    Userid = Convert.ToString(row["userid"]),
-                    Containerid = Convert.ToString(row["containerid"])
+                    UserId = Convert.ToString(row["userId"]),
+                    ContainerId = Convert.ToString(row["containerId"])
                 });
             }
             return addedWatchlistData;
         }
 
         [HttpPost]
-        public void Post([Bind("Id,Userid,Containerid")] AddedWatchlistData addedWatchlistData)
+        public void Post([Bind("Id,UserId,ContainerId")] AddedWatchlistData addedWatchlistData)
         {
             if (ModelState.IsValid)
             {
-                dataAdapter = new SqlDataAdapter($"INSERT INTO addedWatchlistData(userid,containerid) VALUES('{addedWatchlistData.Userid}','{addedWatchlistData.Containerid}')", _con);
+                dataAdapter = new SqlDataAdapter($"INSERT INTO addedWatchlistData(userId,containerId) VALUES('{addedWatchlistData.UserId}','{addedWatchlistData.ContainerId}')", _con);
                 dataAdapter.Fill(dataTable);
             }
         }

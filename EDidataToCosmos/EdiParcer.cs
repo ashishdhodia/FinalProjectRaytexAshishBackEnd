@@ -99,12 +99,8 @@ namespace EDIdataToCosmos
                         {
                             for (int j = 0; j < (singleData.Length - 1); j++)
                             {
-                                if (singleData[j + 1] == "")
-                                {
-                                    continue;
-                                    //Console.WriteLine("HERE");
-                                    nTxn["Q2"][$"{singleData[0]}{j + 1}"] = singleData[j + 1];
-                                }
+                                nTxn["Q2"][$"{singleData[0]}{j + 1}"] = singleData[j + 1];
+
                             }
                         }
                         else if (singleData[0] == "SG")

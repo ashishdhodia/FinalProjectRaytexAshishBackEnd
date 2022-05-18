@@ -1,4 +1,4 @@
-﻿namespace EDIdataAPI.Model
+﻿namespace TransactionServiceBus.Model
 {
     public class TransactionData
     {
