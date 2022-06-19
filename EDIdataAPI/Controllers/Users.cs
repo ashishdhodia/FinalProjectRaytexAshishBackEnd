@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using EDIdataAPI.Model;
 using System.Data.SqlClient;
 using System.Data;
+using System.Security.Cryptography;
 
 namespace securedAppAuth_API.Controllers
 {

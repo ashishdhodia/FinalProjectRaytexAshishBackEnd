@@ -71,6 +71,7 @@ namespace EDIdataAPI
                             };
                         });
                         builder.Services.AddSingleton<IJWTManagerRepository, JWTManagerRepository>();
+                        builder.Services.AddSingleton<IAddedWatchlistDataRepository, AddedWatchlistDataRepository>();
 
 
                         builder.Services.AddControllers();

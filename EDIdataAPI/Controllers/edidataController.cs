@@ -63,5 +63,24 @@ namespace EDIdataAPI.Controllers
             }
             return Ok(JsonConvert.SerializeObject(temp));
         }
+
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetItemAsync(string id)
+        //{
+        //    JObject temp = JObject.Parse("{ 'Data': []}");
+        //    try
+        //    {
+        //        ResponseMessage response = await container.ReadItemStreamAsync(id, new PartitionKey(id));
+        //        StreamReader reader = new StreamReader(response.Content);
+        //        dynamic txnData = JsonConvert.DeserializeObject(reader.ReadToEnd().ToString());
+        //        ((JArray)temp["Data"]).Add(txnData);
+        //        return Ok(JsonConvert.SerializeObject(temp));
+
+        //    }
+        //    catch (CosmosException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+        //    {
+        //        return null;
+        //    }
+        //}
     }
 }

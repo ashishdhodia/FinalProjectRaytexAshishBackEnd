@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using System.IO;
+using EDIdataAPI.Repository;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,12 +15,15 @@ namespace EDIdataAPI.Controllers
     [ApiController]
     public class AddedWatchlistDataController : ControllerBase
     {
+        private readonly IAddedWatchlistDataRepository _addedWatchlistData;
+
         private readonly SqlConnection _con;
         private SqlDataAdapter dataAdapter;
         private DataTable dataTable = new DataTable();
 
-        public AddedWatchlistDataController()
+        public AddedWatchlistDataController(IAddedWatchlistDataRepository addedWatchlistData)
         {
+            _addedWatchlistData = addedWatchlistData;
             _con = new SqlConnection("Server=.; Database=eModal; Integrated Security=true; Trusted_Connection=True; MultipleActiveResultSets=True;");
             _con.Open();
         }
@@ -42,6 +46,27 @@ namespace EDIdataAPI.Controllers
                 });
             }
             return addedWatchlistData;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetAllAddedWatchlistData()
+        {
+            dynamic addedWatchlistData = await _addedWatchlistData.GetAllAddedWatchlistData();
+
+            //List<AddedWatchlistData> addedWatchlistData = new List<AddedWatchlistData>();
+            //dataAdapter = new SqlDataAdapter("SELECT * FROM addedWatchlistData", _con);
+            //dataAdapter.Fill(dataTable);
+            //_con.Close();
+            //foreach (DataRow row in dataTable.Rows)
+            //{
+            //    addedWatchlistData.Add(new AddedWatchlistData
+            //    {
+            //        Id = Convert.ToInt32(row["id"]),
+            //        UserId = Convert.ToString(row["userId"]),
+            //        ContainerId = Convert.ToString(row["containerId"])
+            //    });
+            //}
+            return Ok(addedWatchlistData);
         }
 
         [HttpPost]
